@@ -3,10 +3,19 @@
 import argparse
 import json
 from pathlib import Path
+import platform
 import shutil
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def unsafe_link(path):
+    if not path.is_symlink():
+        return False
+    # macOS has these OS-owned aliases even in a normal temporary directory.
+    aliases = {"/var": "/private/var", "/tmp": "/private/tmp", "/etc": "/private/etc"}
+    return not (platform.system() == "Darwin" and str(path) in aliases and str(path.resolve()) == aliases[str(path)])
 
 
 def install(destination, source=ROOT / "skills"):
@@ -20,7 +29,7 @@ def install(destination, source=ROOT / "skills"):
         target_root = destination / skill.name
         # Reject links even if they resolve to matching files; never traverse them.
         for ancestor in [destination, *destination.parents]:
-            if ancestor.is_symlink():
+            if unsafe_link(ancestor):
                 raise RuntimeError(f"Refusing symlink destination: {ancestor}")
         if target_root.is_symlink():
             raise RuntimeError(f"Refusing symlink destination: {target_root}")
