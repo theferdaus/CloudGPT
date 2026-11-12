@@ -130,3 +130,14 @@ and credential-store-like files, and screens common credential signatures.
 The local agent must still review the bundle for secrets. Source files remain
 unchanged, and no data is uploaded. Transfer this ZIP privately to the cloud
 audit chat. Keep the bundle and private skills outside this public repository.
+
+## Verify a static Site checkout
+
+`scripts/verify_static_site.py` checks a static Sites manifest, HTML asset/link
+targets and fragments, JavaScript syntax and, when present, the capability
+catalogue's internal references. It does not claim browser interaction or
+rendered visual QA. Use the supported Sites preview and browser tools for that.
+
+```sh
+python3 scripts/verify_static_site.py --checkout /path/to/site --origin https://your-site.example --output reports/static-site-checks.json
+```
