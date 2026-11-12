@@ -1,0 +1,14 @@
+# Machine evidence stays outside the public blueprint.
+/reports/
+/.agents/
+/.venv/
+**/__pycache__/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+auth.json
+credentials.json
+config.toml
+node_modules/

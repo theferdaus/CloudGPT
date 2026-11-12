@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "required": {"python3": ">=3.11", "git": "available"},
+  "optional_workflows": {
+    "javascript": ["node", "npm"],
+    "video": ["ffmpeg", "ffprobe"],
+    "documents": ["pandoc"],
+    "browser": ["playwright==1.62.0", "chromium"],
+    "containers": ["docker client", "reachable Docker daemon"]
+  },
+  "policy": "Add workflow-specific pinned dependencies only after auditing the source workflow. Never infer an install requirement from a missing optional binary."
+}
