@@ -97,9 +97,10 @@ def mcp_rows(data, source):
         args = v.get("args", [])
         enabled = v.get("enabled", not v["disabled"] if isinstance(v.get("disabled"), bool) else UNKNOWN)
         row = {"name": identifier(name), "source": str(source), "purpose": clean(v.get("description", UNKNOWN)),
-               "transport": "remote_http" if v.get("url") else "local_stdio" if cmd else UNKNOWN,
+               "transport": "http" if v.get("url") else "stdio" if cmd else UNKNOWN,
+               "endpoint_location": "loopback" if v.get("url") and endpoint(v["url"]).get("host") in ["localhost", "127.0.0.1", "::1"] else "remote_endpoint" if v.get("url") else "local_process" if cmd else UNKNOWN,
                "enabled": enabled if isinstance(enabled, bool) else UNKNOWN,
-               "required_program": Path(cmd).name if isinstance(cmd, str) else UNKNOWN,
+               "required_program": identifier(Path(cmd).name) if isinstance(cmd, str) else UNKNOWN,
                "program_available": bool(shutil.which(cmd)) if isinstance(cmd, str) else UNKNOWN,
                "argument_count": len(args) if isinstance(args, list) else UNKNOWN,
                "argument_values": "omitted", "package_dependencies": UNKNOWN,
