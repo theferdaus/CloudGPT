@@ -1,0 +1,12 @@
+{
+  "name": "cloudgpt-portable-media-tools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Isolated workflow tools; versions selected from the supplied Mac inventory.",
+  "engines": { "node": ">=24" },
+  "dependencies": {
+    "@hypit/hypit": "0.3.1",
+    "@wavespeed/mcp": "1.2.11",
+    "hyperframes": "0.8.195"
+  }
+}

@@ -12,3 +12,7 @@ auth.json
 credentials.json
 config.toml
 node_modules/
+**/.venv/
+/private-skills/
+/skill-transfer/
+/.cache/

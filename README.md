@@ -78,3 +78,55 @@ for private devices and LAN services, and does not replace application login.
 
 See [the local handoff](docs/local-handoff.md) for an audit task that a local Codex
 chat can execute. Keep exported JSON out of public Git history.
+
+## Detailed Mac audit and portable workflow profile
+
+For the expanded `mac-migration-inventory.json` schema:
+
+```sh
+python3 scripts/compare_mac.py --local reports/mac-audit/mac-migration-inventory.json --cloud-filesystem reports/cloud-filesystem-current.json --cloud-host reports/cloud-host-evidence.json --output reports/mac-cloud-comparison.json
+sh scripts/setup-portable.sh
+python3 scripts/probe_mcp.py
+```
+
+The isolated profile pins HyperFrames, Hypit, WaveSpeed MCP, NotebookLM MCP,
+faster-whisper and yt-dlp to versions observed in the supplied audit. Its npm
+and uv lockfiles pin resolved dependencies. PyAV and CTranslate2 also use the
+observed Mac transcription versions because a newer PyAV broke audio decoding.
+Project-local caches avoid protected global package directories.
+
+Use `sh /path/to/CloudGPT/scripts/cloud-run.sh <command> ...` to select the pinned
+CLI tools and writable model/history caches without editing shell profiles or
+replacing HOME. For example, `sh scripts/cloud-run.sh hyperframes --help`.
+
+After reviewing the MCP probes, `scripts/register_cloud_mcp.py` adds a WaveSpeed
+entry using only the managed `WAVESPEED_API_KEY` variable name. It stages NotebookLM
+disabled until a separate cloud login succeeds. Existing server entries, including
+disabled entries, are always preserved. Running it does not refresh an already
+running agent's tool catalog or publish environment settings.
+
+The three official skills bundled in the pinned HyperFrames package can be
+installed with the non-overwriting installer after reviewing their source:
+
+```sh
+python3 scripts/bootstrap.py --source runtimes/media/node_modules/hyperframes/dist/skills --skills-dir /workspace/.agents/skills
+```
+
+They are portable alternatives, not verified copies of the Mac's divergent skill
+versions. Do not replace user-specific skills with them.
+
+## Transfer the actual Mac skill sources
+
+The audit ZIP contains paths and hashes, not skill bodies. On the Mac, review the
+exporter and source files, then run:
+
+```sh
+python3 scripts/export_skill_sources.py --manifest /path/to/custom-skill-migration-manifest.json --output /private/output/mac-skill-sources.zip
+```
+
+It reads only the audited `.codex/skills`, `.agents/skills` and `.claude/skills`
+files, verifies each hash, keeps scope/version copies separate, rejects links
+and credential-store-like files, and screens common credential signatures.
+The local agent must still review the bundle for secrets. Source files remain
+unchanged, and no data is uploaded. Transfer this ZIP privately to the cloud
+audit chat. Keep the bundle and private skills outside this public repository.

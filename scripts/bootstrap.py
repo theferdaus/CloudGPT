@@ -63,7 +63,8 @@ def install(destination, source=ROOT / "skills"):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--skills-dir", type=Path, default=ROOT / ".agents/skills")
+    p.add_argument("--source", type=Path, default=ROOT / "skills", help="Reviewed source directory; configuration is never changed")
     args = p.parse_args()
     if sys.version_info < (3, 11):
         raise SystemExit("Python 3.11+ required")
-    print(json.dumps({"installed_files": install(args.skills_dir), "configuration_changed": False}))
+    print(json.dumps({"installed_files": install(args.skills_dir, args.source), "configuration_changed": False}))

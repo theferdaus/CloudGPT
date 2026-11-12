@@ -15,3 +15,16 @@ jobs:
           python-version: '3.12'
       - run: python -m unittest discover -s tests -v
       - run: python -m compileall -q scripts
+  media-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+        working-directory: runtimes/media
+      - run: node_modules/.bin/hypit version --json
+        working-directory: runtimes/media
+      - run: node_modules/.bin/hyperframes --help
+        working-directory: runtimes/media
